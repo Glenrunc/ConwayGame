@@ -14,10 +14,11 @@ gcc -L/user/local/lib -o main main.c conway.c -lraylib
 ## Main idea for the algorithm
 
 ```mermaid
-    A-->Null;
-    A-->B;
-    B-->A;
-    B-->C;
-    C-->B;
-    C-->Null;
+graph TD;
+    CELL1-->NULL;
+    CELL1-->CELL2;
+    CELL2-->CELL1;
+    CELL2-->CELL3;
+    CELL3-->CELL2;
+    CELL3-->NULL;
 ```

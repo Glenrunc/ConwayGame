@@ -22,3 +22,9 @@ graph TD;
     CELL3-->CELL2;
     CELL3-->NULL;
 ```
+### TODO 08-29-2024
+
+- Make a builder of cell before starting the game
+- Rework the algorithm to be more efficient
+- Make a smooth navigation and block the dezoom 
+- Question?

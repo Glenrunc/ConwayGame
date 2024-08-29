@@ -73,7 +73,7 @@ int main(){
 
 	Camera2D camera = { 0 };
 
-	camera.offset = (Vector2){0.0f,0.0f};
+	camera.offset = (Vector2){0.0f+350.0f,0.0f+350.0f};
 	camera.target = (Vector2){0.0f,0.0f};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
@@ -92,7 +92,7 @@ int main(){
 
 		}
 
-		camera.zoom += ((float)GetMouseWheelMove()*0.5f);
+		camera.zoom += ((float)GetMouseWheelMove()*0.25f);
 
 		BeginDrawing();
 			ClearBackground(RAYWHITE);

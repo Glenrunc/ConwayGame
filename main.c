@@ -73,26 +73,30 @@ int main(){
 
 	Camera2D camera = { 0 };
 
-	camera.offset = (Vector2){0.0f+350.0f,0.0f+350.0f};
+	camera.offset = (Vector2){0.0f+200.0f,0.0f+350.0f};
 	camera.target = (Vector2){0.0f,0.0f};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
 	SetTargetFPS(60);
 	while(!WindowShouldClose()){
+		chained = Iteration(chained);
 
-		if(IsKeyDown(KEY_RIGHT)){
-			chained = Iteration(chained);
-			// player.x += 1.0f;
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        {
+            Vector2 delta = GetMouseDelta();
+            camera.offset = Vector2Add(camera.offset, delta);
+			// camera.target =  Vector2Add(camera.target, delta);
+        }
+
+		if(abs(GetMouseWheelMove())){
+			camera.zoom += ((float)GetMouseWheelMove()*0.25f);
+		
 		}
 
-		if(IsKeyDown(KEY_LEFT)){
-			camera.offset.y -= 1.0f;
-			// player.x -= 1.0f;
-
-		}
-
-		camera.zoom += ((float)GetMouseWheelMove()*0.25f);
+		if(camera.zoom<0.25f) camera.zoom = 0.25f;
+		else if(camera.zoom >20.0f) camera.zoom =20.0f;
 
 		BeginDrawing();
 			ClearBackground(RAYWHITE);

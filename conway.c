@@ -1,20 +1,24 @@
 #include "conway.h"
 
-void AddCell(CellsChained* chained,CellsChained* newCell){
+CellsChained* AddCell(CellsChained* chained,CellsChained* newCell){
 	
 	CellsChained* temp = NULL;
 
 	temp = chained;
-
-	while(temp->next != NULL)
-	{
-		temp = temp->next;
+	if(temp != NULL){
+		while(temp->next != NULL)
+		{
+			temp = temp->next;
+		}
+		temp->next = newCell;
+		newCell->next = NULL;
+		newCell->previous = temp;
+		return chained;
+	}else{
+		temp = newCell;
 	}
-
-	temp->next = newCell;
-	newCell->next = NULL;
-	newCell->previous = temp;
-
+	
+	return temp;
 }
 
 void PrintGame(CellsChained* cells){
@@ -197,7 +201,7 @@ CellsChained *Iteration(CellsChained* cells){
 }
 
 
-void freeChained(CellsChained *chained){
+CellsChained* freeChained(CellsChained *chained){
 	
 	CellsChained *temp = chained;
 
@@ -207,4 +211,20 @@ void freeChained(CellsChained *chained){
 	}
 
 	free(temp);
+	return NULL;
+}
+
+
+int numberOfCell(CellsChained* cells){
+	int i = 0;
+	if (cells != NULL){
+		CellsChained *temp = cells;
+
+		while(temp != NULL){
+			i++;
+			temp = temp->next;
+		}
+	}
+
+	return i;
 }

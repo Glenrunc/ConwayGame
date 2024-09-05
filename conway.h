@@ -30,8 +30,9 @@ typedef struct Cells {
  * 
  * @param newCell Struct Cell pointer
  * @param Cells Linked list of cells
+ * @return CellsChained
  */
-void AddCell(CellsChained* newCell,CellsChained* Cells);
+CellsChained* AddCell(CellsChained* newCell,CellsChained* Cells);
 
 /**
  * @brief print the using Raylib utilies
@@ -76,7 +77,7 @@ CellsChained *Iteration(CellsChained* cells);
  * 
  * @param chained 
  */
-void freeChained(CellsChained *chained);
+CellsChained* freeChained(CellsChained *chained);
 /**
  * @brief use for no redondant information when using the two list into Iteration()
  * 
@@ -88,5 +89,11 @@ void freeChained(CellsChained *chained);
  * @return false 
  */
 bool IsIn(Vector2 *coordinate, int x,int y, int size);
-
+/**
+ * @brief Count the number of cells
+ * 
+ * @param cells 
+ * @return int 
+ */
+int numberOfCell(CellsChained* cells);
 #endif

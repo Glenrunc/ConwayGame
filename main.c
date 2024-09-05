@@ -4,96 +4,73 @@ int main(){
 
 	CellsChained *chained = NULL;
 
-	chained = (CellsChained*)malloc(sizeof(CellsChained));
-
-	(*chained).cell = (Rectangle){0.0f,0.0f,SIZE_CELL,SIZE_CELL};
-	chained->next = NULL;
-	chained->previous = NULL;
-
-	CellsChained *test0 = NULL;
-
-	test0 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test0).cell = (Rectangle){0.0f+SIZE_CELL,0.0f+SIZE_CELL,SIZE_CELL,SIZE_CELL};
-	test0->next = NULL;
-	test0->previous = NULL;
-
-	CellsChained *test1 = NULL;
-
-	test1 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test1).cell = (Rectangle){0.0f+SIZE_CELL*2,0.0f+SIZE_CELL,SIZE_CELL,SIZE_CELL};
-	test1->next = NULL;
-	test1->previous = NULL;
-
-	CellsChained *test2 = NULL;
-
-	test2 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test2).cell = (Rectangle){0.0f+SIZE_CELL*2,0.0f,SIZE_CELL,SIZE_CELL};
-	test2->next = NULL;
-	test2->previous = NULL;
-
-	CellsChained *test3 = NULL;
-
-	test3 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test3).cell = (Rectangle){0.0f+SIZE_CELL*2,0.0f+SIZE_CELL*(-1),SIZE_CELL,SIZE_CELL};
-	test3->next = NULL;
-	test3->previous = NULL;
-
-	CellsChained *test4 = NULL;
-
-	test4 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test4).cell = (Rectangle){0.0f+SIZE_CELL*6,0.0f+SIZE_CELL*1,SIZE_CELL,SIZE_CELL};
-	test4->next = NULL;
-	test4->previous = NULL;
-
-	CellsChained *test5 = NULL;
-
-	test5 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test5).cell = (Rectangle){0.0f+SIZE_CELL*6,0.0f+SIZE_CELL*2,SIZE_CELL,SIZE_CELL};
-	test5->next = NULL;
-	test5->previous = NULL;
-
-	CellsChained *test6 = NULL;
-
-	test6 = (CellsChained*)malloc(sizeof(CellsChained));
-	(*test6).cell = (Rectangle){0.0f+SIZE_CELL*6,0.0f+SIZE_CELL*3,SIZE_CELL,SIZE_CELL};
-	test6->next = NULL;
-	test6->previous = NULL;
-
-	AddCell(chained,test0);
-	AddCell(chained,test1);
-	AddCell(chained,test2);
-	AddCell(chained,test3);
-	AddCell(chained,test4);
-	AddCell(chained,test5);
-	AddCell(chained,test6);
-
-
-
 	InitWindow(WIDTH,HEIGHT,"Game Of Life");
 
 	Camera2D camera = { 0 };
 
-	camera.offset = (Vector2){0.0f+200.0f,0.0f+350.0f};
+	camera.offset = (Vector2){0.0f,0.0f};
 	camera.target = (Vector2){0.0f,0.0f};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
+	bool isRunning = false;
+	char  str[100];
+	Vector2 mouseDelta = (Vector2){1.0f,1.0f};	
+	
 	SetTargetFPS(60);
 	while(!WindowShouldClose()){
-		chained = Iteration(chained);
+		sprintf(str,"%d",numberOfCell(chained));
+		DrawText(str,750,10,20,BLACK);
 
+		// chained = Iteration(chained);
+		DrawText("Conway's Game\nLeft click to draw cell\nR to run\nS to stop\nC to clean", 10, 10, 20, BLACK);
 
+		if(isRunning){
+			chained = Iteration(chained);
+		}
+
+		if( IsKeyPressed(KEY_R)){
+			isRunning = true;
+		}
+		if(IsKeyPressed(KEY_C)){
+			if(chained != NULL){
+				chained = freeChained(chained);
+			}
+		}
+		if(IsKeyPressed(KEY_S)){
+			isRunning = false;
+		}
+
+		if(chained == NULL){
+			isRunning = false;
+		}
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
         {
-            Vector2 delta = GetMouseDelta();
-            camera.offset = Vector2Add(camera.offset, delta);
-			// camera.target =  Vector2Add(camera.target, delta);
+			Vector2 position = GetMousePosition();
+			int isAlive  = IsAlive(chained,(Vector2){(int)(position.x/SIZE_CELL-mouseDelta.x/SIZE_CELL),(int)(position.y/SIZE_CELL-mouseDelta.y/SIZE_CELL)});
+			if(isAlive==-1){
+				CellsChained *newCell = NULL;
+				newCell = (CellsChained*)malloc(sizeof(CellsChained));
+				newCell->cell = (Rectangle){(int)(position.x/SIZE_CELL-mouseDelta.x/SIZE_CELL)*SIZE_CELL,(int)(position.y/SIZE_CELL-mouseDelta.y/SIZE_CELL)*SIZE_CELL,SIZE_CELL,SIZE_CELL};
+				newCell->next = NULL;
+				newCell->previous = NULL;
+				chained = AddCell(chained,newCell);
+			}
         }
 
-		if(abs(GetMouseWheelMove())){
-			camera.zoom += ((float)GetMouseWheelMove()*0.25f);
-		
+		// if(abs(GetMouseWheelMove())){
+		// 	camera.zoom += ((float)GetMouseWheelMove()*0.25f);
+		// }
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)){
+			Vector2 delta = GetMouseDelta();
+            camera.offset = Vector2Add(camera.offset, delta);
+			mouseDelta = Vector2Add(mouseDelta,delta);
 		}
+
+		// if(abs(GetMouseWheelMove())){
+		// 	camera.zoom += ((float)GetMouseWheelMove()*0.25f);
+		// }
 
 		if(camera.zoom<0.25f) camera.zoom = 0.25f;
 		else if(camera.zoom >20.0f) camera.zoom =20.0f;
